@@ -1,5 +1,6 @@
 package org.something.lox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.something.lox.TokenType.*;
@@ -14,30 +15,99 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    Expr parse() {
+    List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(declaration());
+        }
+
+        return statements;
+    }
+
+    private Stmt declaration() {
         try {
-            return expression();
-        } catch (ParseError error) {
+            if (match(VAR))
+                return varDeclaration();
+            return statement();
+        } catch (ParseError e) {
+            synchronize();
             return null;
         }
     }
 
-    private Expr expression() {
-        if (match(LEFT_PAREN)) {
-            Expr expr = expression();
+    private Stmt varDeclaration() {
+        Token name = consume(IDENTIFIER, "Expect variable name.");
 
-            while (match(COMMA)) {
-                Token operator = previous();
-                Expr right = expression();
-                expr = new Expr.Binary(expr, operator, right);
-            }
-
-            consume(RIGHT_PAREN, "Expect ')' after expression.");
-            //TODO when writing evaluation, check if creating a new Expr subclass would be better
-            return new Expr.Grouping(expr);
+        Expr initializer = null;
+        if (match(EQUAL)) {
+            initializer = expression();
         }
 
-        return equality();
+        consume(SEMICOLON, "Expect ';' after variable declaration.");
+        return new Stmt.Var(name, initializer);
+    }
+
+    private Stmt statement() {
+        if (match(PRINT)) return printStatement();
+        if (match(LEFT_BRACE)) return new Stmt.Block(block());
+        return exprStatement();
+    }
+
+    private List<Stmt> block() {
+        List<Stmt> statements = new ArrayList<>();
+
+        while (!check(RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(declaration());
+        }
+
+        consume(RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
+    }
+
+    private Stmt printStatement() {
+        Expr value = expression();
+        consume(SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    private Stmt exprStatement() {
+        Expr expr = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
+    }
+
+    private Expr expression() {
+        if (match(LEFT_PAREN)) return new Expr.Sequence(sequence());
+        return assignment();
+    }
+
+    private List<Expr> sequence() {
+        List<Expr> expressions = new ArrayList<>();
+         while (!check(RIGHT_PAREN) && !isAtEnd()) {
+             expressions.add(assignment());
+         }
+        consume(RIGHT_PAREN, "Expect ')' after expression sequence.");
+         return expressions;
+    }
+
+    private Expr assignment() {
+        Expr expr = equality();
+
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable)expr).name;
+                return new Expr.Assign(name, value);
+            }
+
+            throw error(equals, "Invalid assignment target.");
+        }
+
+        if (check(COMMA)) advance();
+
+        return expr;
     }
 
     private Expr equality() {
@@ -106,6 +176,10 @@ public class Parser {
 
         if (match(NUMBER, STRING)) {
             return new Expr.Literal(previous().literal);
+        }
+
+        if (match(IDENTIFIER)) {
+            return new Expr.Variable(previous());
         }
 
         if (match(LEFT_PAREN)) {
