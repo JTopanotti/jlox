@@ -11,6 +11,8 @@ public class Parser {
 
     private static class ParseError extends RuntimeException {}
 
+    private interface BinaryOpParser { Expr parse(); }
+
     Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
@@ -110,53 +112,32 @@ public class Parser {
         return expr;
     }
 
-    private Expr equality() {
-        Expr expr = comparison();
+    private Expr parseBinaryExpression(BinaryOpParser parser, TokenType... operators) {
+        Expr left = parser.parse();
 
-        //TODO use Java 8 to parse binary trees, see pg. 85
-        while(match(BANG_EQUAL, EQUAL_EQUAL)) {
+        while(match(operators)) {
             Token operator = previous();
-            Expr right = comparison();
-            expr = new Expr.Binary(expr, operator, right);
+            Expr right = parser.parse();
+            left = new Expr.Binary(left, operator, right);
         }
 
-        return expr;
+        return left;
+    }
+
+    private Expr equality() {
+        return parseBinaryExpression(this::comparison, BANG_EQUAL, EQUAL_EQUAL);
     }
 
     private Expr comparison() {
-        Expr expr = term();
-
-        while(match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
-            Token operator = previous();
-            Expr right = term();
-            expr = new Expr.Binary(expr, operator, right);
-        }
-
-        return expr;
+        return parseBinaryExpression(this::term, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL);
     }
 
     private Expr term() {
-        Expr expr = factor();
-
-        while(match(MINUS, PLUS)) {
-            Token operator = previous();
-            Expr right = factor();
-            expr = new Expr.Binary(expr, operator, right);
-        }
-
-        return expr;
+        return parseBinaryExpression(this::factor, MINUS, PLUS);
     }
 
     private Expr factor() {
-        Expr expr = unary();
-
-        while(match(ASTERISK, SLASH)) {
-            Token operator = previous();
-            Expr right = unary();
-            expr = new Expr.Binary(expr, operator, right);
-        }
-
-        return expr;
+        return parseBinaryExpression(this::unary, ASTERISK, SLASH);
     }
 
     private Expr unary() {
