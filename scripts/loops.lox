@@ -1,0 +1,16 @@
+// Prints fibnonacci sequence
+var a = 0;
+var temp;
+//should cause error
+//break;
+for (var b = 1; a < 10000; b = temp + b) {
+
+    if (a > 100) {
+        print "breaking...";
+        break;
+    }
+
+    print a;
+    temp = a;
+    a = b;
+}
