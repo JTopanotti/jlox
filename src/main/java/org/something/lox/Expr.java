@@ -12,6 +12,7 @@ abstract class Expr{
         R visitLogicalExpr(Logical expr);
         R visitUnaryExpr(Unary expr);
         R visitVariableExpr(Variable expr);
+        R visitCallExpr(Call expr);
     }
     static class Sequence extends Expr {
         Sequence (List<Expr> expressions) {
@@ -120,6 +121,22 @@ abstract class Expr{
     }
 
         final Token name;
+    }
+    static class Call extends Expr {
+        Call (Expr callee, Token paren, List<Expr> args) {
+            this.callee = callee;
+            this.paren = paren;
+            this.args = args;
+        }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+        return visitor.visitCallExpr(this);
+    }
+
+        final Expr callee;
+        final Token paren;
+        final List<Expr> args;
     }
 
     abstract <R> R accept(Visitor<R> visitor);
