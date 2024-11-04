@@ -13,6 +13,7 @@ abstract class Expr{
         R visitUnaryExpr(Unary expr);
         R visitVariableExpr(Variable expr);
         R visitCallExpr(Call expr);
+        R visitFunExpr(Fun expr);
     }
     static class Sequence extends Expr {
         Sequence (List<Expr> expressions) {
@@ -137,6 +138,20 @@ abstract class Expr{
         final Expr callee;
         final Token paren;
         final List<Expr> args;
+    }
+    static class Fun extends Expr {
+        Fun (List<Token> parameters, List<Stmt> body) {
+            this.parameters = parameters;
+            this.body = body;
+        }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+        return visitor.visitFunExpr(this);
+    }
+
+        final List<Token> parameters;
+        final List<Stmt> body;
     }
 
     abstract <R> R accept(Visitor<R> visitor);

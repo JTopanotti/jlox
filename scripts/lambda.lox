@@ -1,0 +1,11 @@
+fun whichFun(fn) {
+    print fn;
+    fn("emperor protects");
+}
+
+whichFun(fun (b) {
+    print b;
+});
+
+fun namedFun(a) { print a; }
+whichFun(namedFun);

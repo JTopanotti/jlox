@@ -39,10 +39,9 @@ abstract class Stmt{
         final Expr expression;
     }
     static class Fun extends Stmt {
-        Fun (Token name, List<Token> params, List<Stmt> body) {
+        Fun (Token name, Expr.Fun function) {
             this.name = name;
-            this.params = params;
-            this.body = body;
+            this.function = function;
         }
 
     @Override
@@ -51,8 +50,7 @@ abstract class Stmt{
     }
 
         final Token name;
-        final List<Token> params;
-        final List<Stmt> body;
+        final Expr.Fun function;
     }
     static class If extends Stmt {
         If (Expr condition, Stmt thenBranch, Stmt elseBranch) {
