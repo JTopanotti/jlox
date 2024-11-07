@@ -225,8 +225,8 @@ public class Parser {
             Token equals = previous();
             Expr value = assignment();
 
-            if (expr instanceof Expr.Variable) {
-                Token name = ((Expr.Variable)expr).name;
+            if (expr instanceof Expr.Var) {
+                Token name = ((Expr.Var)expr).name;
                 return new Expr.Assign(name, value);
             }
 
@@ -336,7 +336,7 @@ public class Parser {
         }
 
         if (match(IDENTIFIER)) {
-            return new Expr.Variable(previous());
+            return new Expr.Var(previous());
         }
 
         if (match(FUN)) return functionBody("function");

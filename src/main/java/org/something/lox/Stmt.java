@@ -19,10 +19,10 @@ abstract class Stmt{
             this.statements = statements;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitBlockStmt(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitBlockStmt(this);
+        }
 
         final List<Stmt> statements;
     }
@@ -31,10 +31,10 @@ abstract class Stmt{
             this.expression = expression;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitExpressionStmt(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitExpressionStmt(this);
+        }
 
         final Expr expression;
     }
@@ -44,10 +44,10 @@ abstract class Stmt{
             this.function = function;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitFunStmt(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitFunStmt(this);
+        }
 
         final Token name;
         final Expr.Fun function;
@@ -59,10 +59,10 @@ abstract class Stmt{
             this.elseBranch = elseBranch;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitIfStmt(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitIfStmt(this);
+        }
 
         final Expr condition;
         final Stmt thenBranch;
@@ -73,10 +73,10 @@ abstract class Stmt{
             this.expression = expression;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitPrintStmt(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitPrintStmt(this);
+        }
 
         final Expr expression;
     }
@@ -86,10 +86,10 @@ abstract class Stmt{
             this.initializer = initializer;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitVarStmt(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitVarStmt(this);
+        }
 
         final Token name;
         final Expr initializer;
@@ -100,10 +100,10 @@ abstract class Stmt{
             this.body = body;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitWhileStmt(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitWhileStmt(this);
+        }
 
         final Expr condition;
         final Stmt body;
@@ -114,10 +114,10 @@ abstract class Stmt{
             this.value = value;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitReturnStmt(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitReturnStmt(this);
+        }
 
         final Token keyword;
         final Expr value;
@@ -126,10 +126,10 @@ abstract class Stmt{
         Break () {
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitBreakStmt(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitBreakStmt(this);
+        }
 
     }
 

@@ -11,7 +11,7 @@ abstract class Expr{
         R visitLiteralExpr(Literal expr);
         R visitLogicalExpr(Logical expr);
         R visitUnaryExpr(Unary expr);
-        R visitVariableExpr(Variable expr);
+        R visitVarExpr(Var expr);
         R visitCallExpr(Call expr);
         R visitFunExpr(Fun expr);
     }
@@ -20,10 +20,10 @@ abstract class Expr{
             this.expressions = expressions;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitSequenceExpr(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitSequenceExpr(this);
+        }
 
         final List<Expr> expressions;
     }
@@ -33,10 +33,10 @@ abstract class Expr{
             this.value = value;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitAssignExpr(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitAssignExpr(this);
+        }
 
         final Token name;
         final Expr value;
@@ -48,10 +48,10 @@ abstract class Expr{
             this.right = right;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitBinaryExpr(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitBinaryExpr(this);
+        }
 
         final Expr left;
         final Token operator;
@@ -62,10 +62,10 @@ abstract class Expr{
             this.expression = expression;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitGroupingExpr(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitGroupingExpr(this);
+        }
 
         final Expr expression;
     }
@@ -74,10 +74,10 @@ abstract class Expr{
             this.value = value;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitLiteralExpr(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitLiteralExpr(this);
+        }
 
         final Object value;
     }
@@ -88,10 +88,10 @@ abstract class Expr{
             this.right = right;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitLogicalExpr(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitLogicalExpr(this);
+        }
 
         final Expr left;
         final Token operator;
@@ -103,23 +103,23 @@ abstract class Expr{
             this.right = right;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitUnaryExpr(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitUnaryExpr(this);
+        }
 
         final Token operator;
         final Expr right;
     }
-    static class Variable extends Expr {
-        Variable (Token name) {
+    static class Var extends Expr {
+        Var (Token name) {
             this.name = name;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitVariableExpr(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitVarExpr(this);
+        }
 
         final Token name;
     }
@@ -130,10 +130,10 @@ abstract class Expr{
             this.args = args;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitCallExpr(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitCallExpr(this);
+        }
 
         final Expr callee;
         final Token paren;
@@ -145,10 +145,10 @@ abstract class Expr{
             this.body = body;
         }
 
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-        return visitor.visitFunExpr(this);
-    }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitFunExpr(this);
+        }
 
         final List<Token> parameters;
         final List<Stmt> body;

@@ -20,7 +20,7 @@ public class GenerateAst {
            "Literal  : Object value",
            "Logical  : Expr left, Token operator, Expr right",
            "Unary    : Token operator, Expr right",
-           "Variable : Token name",
+           "Var      : Token name",
            "Call     : Expr callee, Token paren, List<Expr> args",
            "Fun      : List<Token> parameters, List<Stmt> body"
         ));
@@ -101,10 +101,10 @@ public class GenerateAst {
         writer.println("        }");
 
         writer.println();
-        writer.println("    @Override");
-        writer.println("    <R> R accept(Visitor<R> visitor) {");
-        writer.println("        return visitor.visit" + className + baseName + "(this);");
-        writer.println("    }");
+        writer.println("        @Override");
+        writer.println("        <R> R accept(Visitor<R> visitor) {");
+        writer.println("            return visitor.visit" + className + baseName + "(this);");
+        writer.println("        }");
 
         writer.println();
         for (String field : fields) {
