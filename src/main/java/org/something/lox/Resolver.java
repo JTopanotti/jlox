@@ -17,6 +17,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private enum FunctionType {
         NONE,
         FUNCTION,
+        METHOD,
     }
 
     @Override
@@ -88,7 +89,16 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitClassStmt(Stmt.Class stmt) {
         declare(stmt.name);
+
+        for (Stmt.Fun method : stmt.methods) {
+            FunctionType delcaration = FunctionType.METHOD;
+            resolveFunction(method, delcaration);
+        }
+
         define(stmt.name);
+        beginScope();
+        scopes.peek().put("this", true);
+
         return null;
     }
 
@@ -146,6 +156,19 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitGetExpr(Expr.Get expr) {
         resolve(expr.object);
+        return null;
+    }
+
+    @Override
+    public Void visitSetExpr(Expr.Set expr) {
+        resolve(expr.value);
+        resolve(expr.object);
+        return null;
+    }
+
+    @Override
+    public Void visitThisExpr(Expr.This expr) {
+        resolveLocal(expr, expr.keyword);
         return null;
     }
 

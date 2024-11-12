@@ -239,9 +239,10 @@ public class Parser {
             Token equals = previous();
             Expr value = assignment();
 
-            if (expr instanceof Expr.Var) {
-                Token name = ((Expr.Var)expr).name;
-                return new Expr.Assign(name, value);
+            if (expr instanceof Expr.Var var) {
+                return new Expr.Assign(var.name, value);
+            } else if (expr instanceof Expr.Get get) {
+                return new Expr.Set(get.object, get.name, value);
             }
 
             throw error(equals, "Invalid assignment target.");
@@ -351,6 +352,8 @@ public class Parser {
         if (match(NUMBER, STRING)) {
             return new Expr.Literal(previous().literal);
         }
+
+        if (match(THIS)) return new Expr.This(previous());
 
         if (match(IDENTIFIER)) {
             return new Expr.Var(previous());

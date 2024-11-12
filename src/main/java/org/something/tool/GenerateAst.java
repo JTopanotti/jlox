@@ -23,6 +23,8 @@ public class GenerateAst {
            "Var      : Token name",
            "Call     : Expr callee, Token paren, List<Expr> args",
            "Get      : Expr object, Token name",
+           "Set      : Expr object, Token name, Expr value",
+           "This     : Token keyword",
            "Fun      : List<Token> parameters, List<Stmt> body"
         ));
 

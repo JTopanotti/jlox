@@ -14,6 +14,8 @@ abstract class Expr{
         R visitVarExpr(Var expr);
         R visitCallExpr(Call expr);
         R visitGetExpr(Get expr);
+        R visitSetExpr(Set expr);
+        R visitThisExpr(This expr);
         R visitFunExpr(Fun expr);
     }
     static class Sequence extends Expr {
@@ -153,6 +155,34 @@ abstract class Expr{
 
         final Expr object;
         final Token name;
+    }
+    static class Set extends Expr {
+        Set (Expr object, Token name, Expr value) {
+            this.object = object;
+            this.name = name;
+            this.value = value;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitSetExpr(this);
+        }
+
+        final Expr object;
+        final Token name;
+        final Expr value;
+    }
+    static class This extends Expr {
+        This (Token keyword) {
+            this.keyword = keyword;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitThisExpr(this);
+        }
+
+        final Token keyword;
     }
     static class Fun extends Expr {
         Fun (List<Token> parameters, List<Stmt> body) {
